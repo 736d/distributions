@@ -28,8 +28,7 @@ NODEPKG="nodejs"
 
 print_status() {
     echo
-    echo "## $1"
-    echo
+    echo "${green}[zztips] ${bold}${yellow}$1${normal}"
 }
 
 if test -t 1; then # if terminal
@@ -68,18 +67,22 @@ print_bold() {
 }
 
 bail() {
-    echo 'Error executing command, exiting'
+    echo "${green}[zztips] ${bold}${red}Error executing command${normal}, exiting"
     exit 1
 }
 
 exec_cmd_nobail() {
-    echo "+ $1"
+    echo "${green}[zzsh  ] ${bold}${cyan}+ $1${normal}"
     bash -c "$1"
 }
 
 exec_cmd() {
     exec_cmd_nobail "$1" || bail
 }
+
+
+
+
 
 node_deprecation_warning() {
     if [[ "X${NODENAME}" == "Xio.js 1.x" ||
@@ -154,17 +157,29 @@ This script, located at ${bold}https://deb.nodesource.com/setup${normal}, used t
     fi
 }
 
+
+
+
+
+
+
+
+
+
 setup() {
 
-script_deprecation_warning
-node_deprecation_warning
+# script_deprecation_warning
+# node_deprecation_warning
 
-print_status "zznodejs# Installing the NodeSource ${NODENAME} repo..."
+print_status "Installing the NodeSource ${NODENAME} repo..."
 
 if $(uname -m | grep -Eq ^armv6); then
     print_status "You appear to be running on ARMv6 hardware. Unfortunately this is not currently supported by the NodeSource Linux distributions. Please use the 'linux-armv6l' binary tarballs available directly from nodejs.org for Node.js 4 and later."
     exit 1
 fi
+
+
+
 
 PRE_INSTALL_PKGS=""
 
@@ -189,9 +204,14 @@ if [ ! -x /usr/bin/gpg ]; then
     PRE_INSTALL_PKGS="${PRE_INSTALL_PKGS} gnupg"
 fi
 
+
+
+
 # Populating Cache
 print_status "Populating apt-get cache..."
 exec_cmd 'apt-get update'
+
+
 
 if [ "X${PRE_INSTALL_PKGS}" != "X" ]; then
     print_status "Installing packages required for setup:${PRE_INSTALL_PKGS}..."
@@ -200,11 +220,16 @@ if [ "X${PRE_INSTALL_PKGS}" != "X" ]; then
     exec_cmd "apt-get install -y${PRE_INSTALL_PKGS} > /dev/null 2>&1"
 fi
 
+
+
 IS_PRERELEASE=$(lsb_release -d | grep 'Ubuntu .*development' >& /dev/null; echo $?)
 if [[ $IS_PRERELEASE -eq 0 ]]; then
-    print_status "Your distribution, identified as \"$(lsb_release -d -s)\", is a pre-release version of Ubuntu. NodeSource does not maintain official support for Ubuntu versions until they are formally released. You can try using the manual installation instructions available at https://github.com/nodesource/distributions and use the latest supported Ubuntu version name as the distribution identifier, although this is not guaranteed to work."
+    print_status "Your distribution, identified as \"$(lsb_release -d -s)\", is a pre-release version of Ubuntu. NodeSource does not maintain official support for Ubuntu versions until they are ƙ˻`formally`˺ released. You can try using the manual installation instructions available at
+https://github.com/nodesource/distributions and use the latest supported Ubuntu version name as the distribution identifier, although this is not ƙ˻`guaranteed`˺ to work."
     exit 1
 fi
+
+
 
 DISTRO=$(lsb_release -c -s)
 
@@ -217,59 +242,59 @@ check_alt() {
     fi
 }
 
-check_alt "SolydXK"       "solydxk-9" "Debian" "stretch"
-check_alt "Kali"          "sana"     "Debian" "jessie"
-check_alt "Kali"          "kali-rolling" "Debian" "jessie"
-check_alt "Sparky Linux"  "Tyche"    "Debian" "stretch"
-check_alt "Sparky Linux"  "Nibiru"   "Debian" "buster"
-check_alt "MX Linux 17"   "Horizon"  "Debian" "stretch"
-check_alt "MX Linux 18"   "Continuum" "Debian" "stretch"
-check_alt "MX Linux 19"   "patito feo" "Debian" "buster"
-check_alt "Linux Mint"    "maya"     "Ubuntu" "precise"
-check_alt "Linux Mint"    "qiana"    "Ubuntu" "trusty"
-check_alt "Linux Mint"    "rafaela"  "Ubuntu" "trusty"
-check_alt "Linux Mint"    "rebecca"  "Ubuntu" "trusty"
-check_alt "Linux Mint"    "rosa"     "Ubuntu" "trusty"
-check_alt "Linux Mint"    "sarah"    "Ubuntu" "xenial"
-check_alt "Linux Mint"    "serena"   "Ubuntu" "xenial"
-check_alt "Linux Mint"    "sonya"    "Ubuntu" "xenial"
-check_alt "Linux Mint"    "sylvia"   "Ubuntu" "xenial"
-check_alt "Linux Mint"    "tara"     "Ubuntu" "bionic"
-check_alt "Linux Mint"    "tessa"    "Ubuntu" "bionic"
-check_alt "Linux Mint"    "tina"     "Ubuntu" "bionic"
-check_alt "Linux Mint"    "tricia"   "Ubuntu" "bionic"
-check_alt "Linux Mint"    "ulyana"   "Ubuntu" "focal"
-check_alt "LMDE"          "betsy"    "Debian" "jessie"
-check_alt "LMDE"          "cindy"    "Debian" "stretch"
-check_alt "LMDE"          "debbie"   "Debian" "buster"
-check_alt "elementaryOS"  "luna"     "Ubuntu" "precise"
-check_alt "elementaryOS"  "freya"    "Ubuntu" "trusty"
-check_alt "elementaryOS"  "loki"     "Ubuntu" "xenial"
-check_alt "elementaryOS"  "juno"     "Ubuntu" "bionic"
-check_alt "elementaryOS"  "hera"     "Ubuntu" "bionic"
-check_alt "Trisquel"      "toutatis" "Ubuntu" "precise"
-check_alt "Trisquel"      "belenos"  "Ubuntu" "trusty"
-check_alt "Trisquel"      "flidas"   "Ubuntu" "xenial"
-check_alt "Uruk GNU/Linux" "lugalbanda" "Ubuntu" "xenial"
-check_alt "BOSS"          "anokha"   "Debian" "wheezy"
-check_alt "BOSS"          "anoop"    "Debian" "jessie"
-check_alt "BOSS"          "drishti"  "Debian" "stretch"
-check_alt "BOSS"          "unnati"   "Debian" "buster"
-check_alt "bunsenlabs"    "bunsen-hydrogen" "Debian" "jessie"
-check_alt "bunsenlabs"    "helium"   "Debian" "stretch"
-check_alt "Tanglu"        "chromodoris" "Debian" "jessie"
-check_alt "PureOS"        "green"    "Debian" "sid"
-check_alt "PureOS"        "amber"    "Debian" "buster"
-check_alt "Devuan"        "jessie"   "Debian" "jessie"
-check_alt "Devuan"        "ascii"    "Debian" "stretch"
-check_alt "Devuan"        "beowulf"  "Debian" "buster"
-check_alt "Devuan"        "ceres"    "Debian" "sid"
-check_alt "Deepin"        "panda"    "Debian" "sid"
-check_alt "Deepin"        "unstable" "Debian" "sid"
-check_alt "Deepin"        "stable"   "Debian" "buster"
-check_alt "Pardus"        "onyedi"   "Debian" "stretch"
-check_alt "Liquid Lemur"  "lemur-3"  "Debian" "stretch"
-check_alt "Astra Linux"   "orel"     "Debian" "stretch"
+check_alt "SolydXK"        "solydxk-9"       "Debian" "stretch"
+check_alt "Kali"           "sana"            "Debian" "jessie"
+check_alt "Kali"           "kali-rolling"    "Debian" "jessie"
+check_alt "Sparky Linux"   "Tyche"           "Debian" "stretch"
+check_alt "Sparky Linux"   "Nibiru"          "Debian" "buster"
+check_alt "MX Linux 17"    "Horizon"         "Debian" "stretch"
+check_alt "MX Linux 18"    "Continuum"       "Debian" "stretch"
+check_alt "MX Linux 19"    "patito feo"      "Debian" "buster"
+check_alt "Linux Mint"     "maya"            "Ubuntu" "precise"
+check_alt "Linux Mint"     "qiana"           "Ubuntu" "trusty"
+check_alt "Linux Mint"     "rafaela"         "Ubuntu" "trusty"
+check_alt "Linux Mint"     "rebecca"         "Ubuntu" "trusty"
+check_alt "Linux Mint"     "rosa"            "Ubuntu" "trusty"
+check_alt "Linux Mint"     "sarah"           "Ubuntu" "xenial"
+check_alt "Linux Mint"     "serena"          "Ubuntu" "xenial"
+check_alt "Linux Mint"     "sonya"           "Ubuntu" "xenial"
+check_alt "Linux Mint"     "sylvia"          "Ubuntu" "xenial"
+check_alt "Linux Mint"     "tara"            "Ubuntu" "bionic"
+check_alt "Linux Mint"     "tessa"           "Ubuntu" "bionic"
+check_alt "Linux Mint"     "tina"            "Ubuntu" "bionic"
+check_alt "Linux Mint"     "tricia"          "Ubuntu" "bionic"
+check_alt "Linux Mint"     "ulyana"          "Ubuntu" "focal"
+check_alt "LMDE"           "betsy"           "Debian" "jessie"
+check_alt "LMDE"           "cindy"           "Debian" "stretch"
+check_alt "LMDE"           "debbie"          "Debian" "buster"
+check_alt "elementaryOS"   "luna"            "Ubuntu" "precise"
+check_alt "elementaryOS"   "freya"           "Ubuntu" "trusty"
+check_alt "elementaryOS"   "loki"            "Ubuntu" "xenial"
+check_alt "elementaryOS"   "juno"            "Ubuntu" "bionic"
+check_alt "elementaryOS"   "hera"            "Ubuntu" "bionic"
+check_alt "Trisquel"       "toutatis"        "Ubuntu" "precise"
+check_alt "Trisquel"       "belenos"         "Ubuntu" "trusty"
+check_alt "Trisquel"       "flidas"          "Ubuntu" "xenial"
+check_alt "Uruk GNU/Linux" "lugalbanda"      "Ubuntu" "xenial"
+check_alt "BOSS"           "anokha"          "Debian" "wheezy"
+check_alt "BOSS"           "anoop"           "Debian" "jessie"
+check_alt "BOSS"           "drishti"         "Debian" "stretch"
+check_alt "BOSS"           "unnati"          "Debian" "buster"
+check_alt "bunsenlabs"     "bunsen-hydrogen" "Debian" "jessie"
+check_alt "bunsenlabs"     "helium"          "Debian" "stretch"
+check_alt "Tanglu"         "chromodoris"     "Debian" "jessie"
+check_alt "PureOS"         "green"           "Debian" "sid"
+check_alt "PureOS"         "amber"           "Debian" "buster"
+check_alt "Devuan"         "jessie"          "Debian" "jessie"
+check_alt "Devuan"         "ascii"           "Debian" "stretch"
+check_alt "Devuan"         "beowulf"         "Debian" "buster"
+check_alt "Devuan"         "ceres"           "Debian" "sid"
+check_alt "Deepin"         "panda"           "Debian" "sid"
+check_alt "Deepin"         "unstable"        "Debian" "sid"
+check_alt "Deepin"         "stable"          "Debian" "buster"
+check_alt "Pardus"         "onyedi"          "Debian" "stretch"
+check_alt "Liquid Lemur"   "lemur-3"         "Debian" "stretch"
+check_alt "Astra Linux"    "orel"            "Debian" "stretch"
 
 if [ "X${DISTRO}" == "Xdebian" ]; then
   print_status "Unknown Debian-based distribution, checking /etc/debian_version..."
@@ -282,13 +307,22 @@ if [ "X${DISTRO}" == "Xdebian" ]; then
   fi
 fi
 
-print_status "Confirming \"${DISTRO}\" is supported..."
 
+
+
+
+
+
+print_status "Confirming \"${DISTRO}\" is supported..."
+# ZZ_RELEASE="'https://deb.nodesource.com/${NODEREPO}/dists/${DISTRO}/Release'"
+ZZ_RELEASE="'https://mirrors.tuna.tsinghua.edu.cn/nodesource/deb_14.x/dists/${DISTRO}/Release'"
 if [ -x /usr/bin/curl ]; then
-    exec_cmd_nobail "curl -sLf -o /dev/null 'https://deb.nodesource.com/${NODEREPO}/dists/${DISTRO}/Release'"
+    exec_cmd_nobail "curl -sLf -o /dev/null \
+                    ${ZZ_RELEASE}"
     RC=$?
 else
-    exec_cmd_nobail "wget -qO /dev/null -o /dev/null 'https://deb.nodesource.com/${NODEREPO}/dists/${DISTRO}/Release'"
+    exec_cmd_nobail "wget -qO /dev/null -o /dev/null \
+                    ${ZZ_RELEASE}"
     RC=$?
 fi
 
@@ -304,30 +338,42 @@ if [ -f "/etc/apt/sources.list.d/chris-lea-node_js-$DISTRO.list" ]; then
     exec_cmd "rm -f /etc/apt/sources.list.d/chris-lea-node_js-${DISTRO}.list"
 fi
 
-print_status 'Adding the NodeSource signing key to your keyring...'
 
+
+
+
+print_status 'Adding the NodeSource signing key to your keyring...'
 if [ -x /usr/bin/curl ]; then
     exec_cmd 'curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -'
 else
     exec_cmd 'wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -'
 fi
 
-print_status "Creating apt sources list file for the NodeSource ${NODENAME} repo..."
 
-exec_cmd "echo 'deb https://deb.nodesource.com/${NODEREPO} ${DISTRO} main' > /etc/apt/sources.list.d/nodesource.list"
-exec_cmd "echo 'deb-src https://deb.nodesource.com/${NODEREPO} ${DISTRO} main' >> /etc/apt/sources.list.d/nodesource.list"
+
+
+print_status "Creating apt sources list file for the NodeSource ${NODENAME} repo..."
+exec_cmd "echo 'deb https://deb.nodesource.com/${NODEREPO} ${DISTRO} main' > \
+                /etc/apt/sources.list.d/nodesource.list"
+exec_cmd "echo 'deb-src https://deb.nodesource.com/${NODEREPO} ${DISTRO} main' >> \
+                /etc/apt/sources.list.d/nodesource.list"
+
+
+
 
 print_status 'Running `apt-get update` for you...'
-
 exec_cmd 'apt-get update'
 
-print_status """Run \`${bold}sudo apt-get install -y ${NODEPKG}${normal}\` to install ${NODENAME} and npm
+
+
+
+print_status """Run \`${bold}sudo apt-get install -y ${NODEPKG}${normal}\` to install ${NODENAME} and `npm`
 ## You may also need development tools to build native addons:
-     sudo apt-get install gcc g++ make
-## To install the Yarn package manager, run:
-     curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-     echo \"deb https://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list
-     sudo apt-get update && sudo apt-get install yarn
+      sudo apt-get install gcc g++ make
+## To install the `Yarn` package manager, run:
+      curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      echo \"deb https://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list
+      sudo apt-get update && sudo apt-get install yarn
 """
 
 }
